@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Pizzeria</string>
+    <string name="title_activity_product_details">ProductDetails</string>
+    <string name="title_activity_update_products">UpdateProducts</string>
+    <string name="title_activity_add_products">AddProduct</string>
+    <string name="title_activity_add_type">AddType</string>
+    <string name="title_activity_category_details">CategoryDetails</string>
+    <string name="title_activity_order_details">OrderDetail</string>
+    <string name="title_activity_ordermanager">OrderManager</string>
+    <string name="title_activity_ordercancelled">OrderCancelled</string>
+    <string name="title_activity_ordercompleted">OrderCompleted</string>
+    <string name="title_activity_orderpending">OrderPending</string>
+    <string name="title_activity_ordershipping">OrderShipping</string>
+    <string name="title_activity_revenue">Revenue</string>
+    <string name="title_activity_update_category">UpdateCategory</string>
+    <string name="title_activity_update_user">UpdateUser</string>
+    <string name="title_activity_user_information">UserInformation</string>
+    <string name="title_activity_login">Login</string>
+</resources>
