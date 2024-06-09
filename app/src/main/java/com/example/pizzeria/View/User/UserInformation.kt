@@ -8,52 +8,39 @@ import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.DropdownMenu
+import androidx.compose.material.Button
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -63,20 +50,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
 import com.example.pizzeria.MainActivity
 import com.example.pizzeria.Model.UserData
 import com.example.pizzeria.R
-import com.example.pizzeria.ui.theme.Pink40
-import com.example.pizzeria.ui.theme.Pink80
 import com.example.pizzeria.ui.theme.PizzeriaTheme
-import com.example.pizzeria.ui.theme.bg
-import com.example.pizzeria.ui.theme.blue
+import com.example.pizzeria.ui.theme.blackcart
 import com.example.pizzeria.ui.theme.blueColor
-import com.example.pizzeria.ui.theme.darkblue
-import com.example.pizzeria.ui.theme.red
+import com.example.pizzeria.ui.theme.delete
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -138,8 +121,8 @@ class UserInformation : ComponentActivity() {
                             val list = queryDocumentSnapshot.documents
                             for (d in list){
                                 val c: UserData? = d.toObject(UserData::class.java)
-                                c?.UserID = d.id
-                                Log.e("TAG", "Course id is : " + c!!.UserID)
+                                c?.userID = d.id
+                                Log.e("TAG", "Course id is : " + c!!.userID)
                                 userList.add(c)
                             }
                         }else{
@@ -184,169 +167,191 @@ fun UserInformationUI(context: Context, userList: SnapshotStateList<UserData>) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(0.dp, 70.dp, 0.dp),
+            .padding(12.dp, 75.dp, 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
 
         LazyColumn {
             itemsIndexed(userList) { index, item ->
-                Surface(
-                    shape = RoundedCornerShape(16.dp),
-                    color = blue,
+                Column(
                     modifier = Modifier
-                        .height(220.dp)
-                        .padding(8.dp),
-                    shadowElevation = 10.dp,
-                    onClick = {
-
-                    }
+                        .fillMaxWidth()
+                        .padding(vertical = 10.dp, horizontal = 5.dp)
                 ) {
                     Row(
-                        modifier = Modifier.padding(10.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        modifier = Modifier
+                            .fillMaxWidth()
+//                            .padding(end = 5.dp),
+//                        verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Surface(
-                            color = blue,
-                            shape = CircleShape,
-                            modifier = Modifier.size(100.dp)
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.user),
-                                contentScale = ContentScale.Crop,
+                            Icon(
+                                imageVector = Icons.Rounded.Person,
                                 contentDescription = null,
-
+                                modifier = Modifier.height(20.dp)
                             )
+                            Spacer(modifier = Modifier.width(5.dp))
+                            userList[index]?.role?.let {
+                                Text(
+                                    text = it,
+                                    fontSize = 15.sp,
+                                    color = blackcart,
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
+
+                    }
+
+                    Surface(
+                        shape = RoundedCornerShape(12.dp),
+                        color = Color.White,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = Color.LightGray,
+                                shape = RoundedCornerShape(12.dp),
+                            )
+                            .padding(bottom = 2.dp),
+                        shadowElevation = 6.dp,
+                        onClick = {
+
                         }
-                        Column(
+                    ) {
+
+                        Row(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .weight(2f)
-                                .padding(horizontal = 15.dp, vertical = 0.dp),
-                            verticalArrangement = Arrangement.Center
+                                .padding(bottom = 10.dp, start = 10.dp),
                         ) {
-
-
-                            Row(
+                            androidx.compose.material.Surface(
+                                shape = RoundedCornerShape(9.dp),
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 8.dp),
+                                    .padding(top = 22.dp)
+                                    .size(width = 70.dp, height = 70.dp)
+                            ) {
 
-                                ) {
-                                Text(
-                                    text = "Email: ",
-                                    fontSize = 18.sp,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.SemiBold,
-
-                                    )
-                                Spacer(modifier = Modifier.height(3.dp))
-                                userList[index]?.email?.let {
-                                    Text(
-                                        text = it,
-                                        fontSize = 18.sp,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.SemiBold,
-                                        color = Pink40,
+                                userList[index]?.image?.let {
+                                    Image(
+                                        painter = rememberAsyncImagePainter(it),
+                                        contentDescription = "",
+                                        contentScale = ContentScale.Crop
                                     )
                                 }
                             }
-
-                            Spacer(modifier = Modifier.height(3.dp))
-                            Row(
+                            Column(
                                 modifier = Modifier
+                                    .padding(start = 10.dp, top = 20.dp)
                                     .fillMaxWidth()
-                                    .padding(vertical = 8.dp),
-
+                                    .weight(2f),
+                            ) {
+                                Row(
+                                    modifier = Modifier
+                                        .padding(bottom = 10.dp)
                                 ) {
-                                Text(
-                                    text = "Password: ",
-                                    fontSize = 18.sp,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.SemiBold,
-
-                                    )
-                                userList[index]?.password?.let {
                                     Text(
-                                        text = it,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis,
-                                        fontSize = 18.sp,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.SemiBold,
-                                        color = Pink40,
+                                        text = "Name:",
+                                        fontSize = 15.sp,
+                                        color = Color.DarkGray
                                     )
-                                }
-                            }
-                            Spacer(modifier = Modifier.height(3.dp))
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 8.dp),
-
-                                ) {
-                                Text(
-                                    text = "UserType: ",
-                                    fontSize = 18.sp,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.SemiBold,
-
-                                    )
-                                userList[index]?.userType?.let {
-                                    Text(
-                                        text = it,
-                                        fontSize = 18.sp,
-                                        style = MaterialTheme.typography.titleMedium,
-                                        fontWeight = FontWeight.SemiBold,
-                                        color = Pink40,
-                                    )
-                                }
-                            }
-                            Spacer(modifier = Modifier.height(3.dp))
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(vertical = 8.dp),
-                                horizontalArrangement = Arrangement.Start,
-                                verticalAlignment = Alignment.CenterVertically
-                            )
-                            {
-                                IconButton(
-                                    onClick = {
-                                        val i = Intent(context, UpdateUser::class.java)
-                                        i.putExtra("email", item.email)
-                                        i.putExtra("UserID", item.UserID)
-                                        i.putExtra("password", item.password)
-                                        i.putExtra("userType", item.userType)
-                                        context.startActivity(i)
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    userList[index]?.fullName?.let {
+                                        Text(
+                                            text = it,
+                                            fontSize = 16.sp,
+                                            color = blackcart,
+                                            fontWeight = FontWeight.Medium
+                                        )
                                     }
+                                }
+                                Row(
+                                    modifier = Modifier
+                                        .padding(bottom = 10.dp)
+                                ) {
+                                    Text(
+                                        text = "Phone:",
+                                        fontSize = 15.sp,
+                                        color = Color.DarkGray
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    userList[index]?.phoneNumber?.let {
+                                        Text(
+                                            text = it,
+                                            fontSize = 16.sp,
+                                            color = blackcart,
+                                            fontWeight = FontWeight.Medium
+                                        )
+                                    }
+                                }
+                                Row(
+                                    modifier = Modifier
+                                        .padding(bottom = 10.dp)
+                                ) {
+                                    Text(
+                                        text = "Email:",
+                                        fontSize = 15.sp,
+                                        color = Color.DarkGray
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    userList[index]?.email?.let {
+                                        Text(
+                                            text = it,
+                                            fontSize = 16.sp,
+                                            color = blackcart,
+                                            fontWeight = FontWeight.Medium
+                                        )
+                                    }
+
+                                }
+                                Row(
+                                    modifier = Modifier
+                                        .padding(bottom = 10.dp)
+                                ) {
+                                    Text(
+                                        text = "Address:",
+                                        fontSize = 15.sp,
+                                        color = Color.DarkGray
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    userList[index]?.address?.let {
+                                        Text(
+                                            text = it,
+                                            fontSize = 16.sp,
+                                            color = blackcart,
+                                            fontWeight = FontWeight.Medium
+                                        )
+                                    }
+                                }
+                            }
+
+                            Column(
+                                modifier = Modifier
+                                    .weight(0.3f),
+                                verticalArrangement = Arrangement.Top,
+                                horizontalAlignment = Alignment.End
+                            ) {
+                                Button(
+                                    onClick = {
+                                deleteDataFromFirebase(item.userID, context)
+                                    },
+                                    contentPadding = PaddingValues(),
+                                    shape = CircleShape,
+                                    colors = androidx.compose.material.ButtonDefaults.buttonColors(backgroundColor = delete, contentColor = Color.White),
+                                    modifier = Modifier
+                                        .width(23.dp)
+                                        .height(23.dp)
                                 ) {
                                     Icon(
-                                        imageVector = Icons.Default.Edit,
-                                        contentDescription = "Edit",
-                                        tint = Color.Black
-                                    )
-                                }
-                                IconButton(
-                                    onClick = {
-                                        deleteDataFromFirebase(item.UserID, context)
-                                    }
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.Delete,
-                                        contentDescription = "Delete",
-                                        tint = red
+                                        imageVector = Icons.Rounded.Clear,
+                                        null,
+                                        modifier = Modifier
+                                            .size(18.dp),
+                                        tint = Color.White
                                     )
                                 }
                             }
                         }
-
                     }
                 }
             }
         }
     }
-
 }

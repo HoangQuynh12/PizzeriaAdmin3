@@ -8,6 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -20,6 +21,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -102,166 +104,172 @@ fun OrderDetailsUI(id: String, modifier: Modifier = Modifier) {
     }
 
     order?.let { orderData ->
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(3.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+        LazyColumn(
+            Modifier.padding(top = 60.dp)
         ) {
-            Surface(
-                shape = RoundedCornerShape(18.dp),
-                color = blue,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp),
-                shadowElevation = 10.dp
-            ) {
+            item {
                 Column(
                     modifier = Modifier
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .fillMaxSize()
+                        .padding(10.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.order),
-                        contentScale = ContentScale.Crop,
-                        contentDescription = "",
-                        modifier = Modifier.size(100.dp)
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
+                    Surface(
+                        shape = RoundedCornerShape(18.dp),
+                        color = Color(0xFFEEF7FF),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        shadowElevation = 10.dp
                     ) {
-                        Text(
-                            text = "Name: ",
-                            fontSize = 22.sp,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Pink40
-                        )
-                        orderData.custumerName?.let {
-                            Text(
-                                text = it,
-                                fontSize = 22.sp,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold
+                        Column(
+                            modifier = Modifier
+                                .padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.box),
+                                contentDescription = "",
+                                modifier = Modifier.size(90.dp),
+                                tint = Color(0xFF03AED2)
                             )
+                            Spacer(modifier = Modifier.height(20.dp))
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "Name:",
+                                    fontSize = 18.sp,
+                                    color = Color.DarkGray
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                orderData.custumerName?.let {
+                                    Text(
+                                        text = it,
+                                        fontSize = 18.sp,
+                                        color = blackcart,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                }
+                            }
+                            Row(
+                                modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "Address:",
+                                    fontSize = 18.sp,
+                                    color = Color.DarkGray
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                orderData.custumerAdd?.let {
+                                    Text(
+                                        text = it,
+                                        fontSize = 18.sp,
+                                        color = blackcart,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                }
+                            }
+                            Row(
+                                modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "Phone number:",
+                                    fontSize = 18.sp,
+                                    color = Color.DarkGray
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                orderData.custumerPhone?.let {
+                                    Text(
+                                        text = it,
+                                        fontSize = 18.sp,
+                                        color = blackcart,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                }
+                            }
+                            Row(
+                                modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "Order Date:",
+                                    fontSize = 18.sp,
+                                    color = Color.DarkGray
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                orderData.date?.let { date ->
+                                    val formattedDate = SimpleDateFormat(
+                                        "dd/MM/yyyy HH:mm",
+                                        Locale("vi", "VN")
+                                    ).format(date)
+                                    Text(
+                                        text = formattedDate,
+                                        fontSize = 18.sp,
+                                        color = blackcart,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                }
+                            }
+                            Row(
+                                modifier = Modifier.fillMaxWidth().padding(bottom = 15.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "Total:",
+                                    fontSize = 18.sp,
+                                    color = Color.DarkGray
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                orderData.total?.let {
+                                    Text(
+                                        text = "$ " + it,
+                                        fontSize = 18.sp,
+                                        color = blackcart,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                }
+                            }
+                            Row(
+                                modifier = Modifier.fillMaxWidth().padding(bottom = 15.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "Status:",
+                                    fontSize = 18.sp,
+                                    color = Color.DarkGray
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                orderData.status?.let {
+                                    Text(
+                                        text = it,
+                                        fontSize = 18.sp,
+                                        color = blackcart,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                }
+                            }
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth().padding(bottom = 10.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "Order Items",
+                                    fontSize = 17.sp,
+                                    color = darkblue,
+                                    fontWeight = FontWeight.Medium,
+                                    textDecoration = TextDecoration.Underline
+                                )
+                            }
+                            orderData.items?.forEach { item ->
+                                OrderItemRow(item)
+                            }
                         }
-                    }
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "Address: ",
-                            fontSize = 22.sp,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Pink40
-                        )
-                        orderData.custumerAdd?.let {
-                            Text(
-                                text = it,
-                                fontSize = 22.sp,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "Order Date: ",
-                            fontSize = 22.sp,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Pink40
-                        )
-                        orderData.date?.let { date ->
-                            val formattedDate = SimpleDateFormat(
-                                "dd/MM/yyyy HH:mm",
-                                Locale.getDefault()
-                            ).format(date)
-                            Text(
-                                text = formattedDate,
-                                fontSize = 22.sp,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "Status: ",
-                            fontSize = 22.sp,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Pink40
-                        )
-                        orderData.status?.let {
-                            Text(
-                                text = it,
-                                fontSize = 22.sp,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "Phone Number: ",
-                            fontSize = 22.sp,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Pink40
-                        )
-                        orderData.custumerPhone?.let {
-                            Text(
-                                text = it,
-                                fontSize = 22.sp,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = "Total: ",
-                            fontSize = 22.sp,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Pink40
-                        )
-                        orderData.total?.let {
-                            Text(
-                                text = "$ " + it,
-                                fontSize = 22.sp,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Text(
-                        text = "Order Items:",
-                        fontSize = 22.sp,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Pink40
-                    )
-                    orderData.items?.forEach { item ->
-                        Spacer(modifier = Modifier.height(6.dp))
-                        OrderItemRow(item)
                     }
                 }
             }
@@ -273,12 +281,11 @@ fun OrderDetailsUI(id: String, modifier: Modifier = Modifier) {
 fun OrderItemRow(item: OrderItem) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.Start
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(5.dp)
         ) {
             Image(
                 painter = rememberImagePainter(item.image),
@@ -290,33 +297,25 @@ fun OrderItemRow(item: OrderItem) {
             Column {
                 Text(
                     text = item.name ?: "",
-                    fontSize = 20.sp,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Pink40
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = blackcart
                 )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Description: ${item.description ?: ""}",
-                    fontSize = 16.sp,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Normal
-                )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = "Price: $ ${item.price ?: 0.0}",
                     fontSize = 16.sp,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Normal
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = "Quantity: ${item.quantity ?: 0}",
                     fontSize = 16.sp,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.Normal
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = "Note: ${item.note ?: ""}",
                     fontSize = 16.sp,

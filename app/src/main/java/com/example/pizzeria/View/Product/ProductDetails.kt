@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.icons.Icons
@@ -37,6 +38,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -70,8 +72,10 @@ import com.example.pizzeria.ui.theme.Pink40
 import com.example.pizzeria.ui.theme.Pink80
 import com.example.pizzeria.ui.theme.PizzeriaTheme
 import com.example.pizzeria.ui.theme.blue
+import com.example.pizzeria.ui.theme.blue1
 import com.example.pizzeria.ui.theme.blueColor
 import com.example.pizzeria.ui.theme.darkblue
+import com.example.pizzeria.ui.theme.delete
 import com.example.pizzeria.ui.theme.red
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -180,7 +184,7 @@ fun ProductDetailsUI(context: Context, productList: SnapshotStateList<ProductDat
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(0.dp, 70.dp, 0.dp),
+            .padding(start = 5.dp, top = 70.dp, end = 5.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         IconButton(onClick = { context.startActivity(Intent(context, AddProduct::class.java)) }) {
@@ -191,10 +195,9 @@ fun ProductDetailsUI(context: Context, productList: SnapshotStateList<ProductDat
             itemsIndexed(productList) { index, item ->
                 Surface(
                     shape = RoundedCornerShape(16.dp),
-                    color = blue,
+                    color = blue1,
                     modifier = Modifier
-                        .height(210.dp)
-                        .padding(8.dp),
+                        .padding(5.dp),
                     shadowElevation = 10.dp,
                     onClick = {
                         val i = Intent(context, UpdateProducts::class.java)
@@ -235,7 +238,7 @@ fun ProductDetailsUI(context: Context, productList: SnapshotStateList<ProductDat
                             Surface(
                                 shape = RoundedCornerShape(24.dp),
                                 modifier = Modifier.wrapContentSize(),
-                                color = Pink80
+                                color = blue
                             ) {
                                 productList[index]?.productType?.let {
                                     Text(
@@ -257,7 +260,7 @@ fun ProductDetailsUI(context: Context, productList: SnapshotStateList<ProductDat
                             productList[index]?.productName?.let {
                                 Text(
                                     text = it,
-                                    fontSize = 22.sp,
+                                    fontSize = 17.sp,
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.SemiBold
                                 )
@@ -266,7 +269,10 @@ fun ProductDetailsUI(context: Context, productList: SnapshotStateList<ProductDat
                             Spacer(modifier = Modifier.height(6.dp))
 
                             productList[index]?.productPrice?.let {
-                                Text(text = "$ "+it)
+                                Text(text = "$ "+it,
+                                    fontSize = 17.sp,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.SemiBold)
                             }
                             Spacer(modifier = Modifier.height(6.dp))
                             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -304,63 +310,36 @@ fun ProductDetailsUI(context: Context, productList: SnapshotStateList<ProductDat
                                     contentDescription = null
                                 )
                             }
-                            Spacer(modifier = Modifier.height(6.dp))
-
-                            OutlinedButton(
-                                shape = RoundedCornerShape(7.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    contentColor = Color.Black,
-                                    containerColor = darkblue
-                                ),
-                                border = BorderStroke(0.5.dp, blueColor),
-                                onClick = {
-                                    val i = Intent(context, UpdateProducts::class.java)
-                                    i.putExtra("productName", item?.productName)
-                                    i.putExtra("productType", item?.productType)
-                                    i.putExtra("productPrice", item?.productPrice)
-                                    i.putExtra("productDescription", item?.productDescription)
-                                    i.putExtra("productImage", item?.productImage)
-                                    i.putExtra("productID", item?.productID)
-
-                                    context.startActivity(i)
-                                }
-                            ) {
-                                Text(
-                                    text = "Edit",
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.SemiBold,
-                                    style = MaterialTheme.typography.titleLarge
-                                )
-                            }
                         }
 
                     }
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End,
-                        verticalAlignment = Alignment.CenterVertically
-                    )
-                    {
+                    Row() {
                         Surface(
                             onClick = {
-                                deleteDataFromFirebase(productList[index]?.productID, context)
+                                deleteDataFromFirebase(item.productID, context)
                             },
-                            color = blue
+                            shape = CircleShape,
+                            color = delete
                         ) {
                             Icon(
-                                imageVector = Icons.Default.Delete,
+                                imageVector = Icons.Default.Clear,
                                 contentDescription = "",
-                                tint = red,
+                                tint = Color(0xFFFFFFFF),
                                 modifier = Modifier
-                                    .size(30.dp)
-                                    .padding(2.dp)
-
+                                    .size(20.dp)
+                                    .padding(2.dp),
                             )
                         }
                     }
+
                 }
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun PreviewProductDetailsUI(){
+    ProductDetailsUI(LocalContext.current, SnapshotStateList())
 }

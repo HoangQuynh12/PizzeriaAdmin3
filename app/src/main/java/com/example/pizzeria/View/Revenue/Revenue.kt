@@ -9,12 +9,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -33,12 +35,17 @@ import com.example.pizzeria.Model.Order
 import com.example.pizzeria.R
 import com.example.pizzeria.View.Order.OrderDetails
 import com.example.pizzeria.ui.theme.PizzeriaTheme
+import com.example.pizzeria.ui.theme.blackcart
 import com.example.pizzeria.ui.theme.blue
 import com.example.pizzeria.ui.theme.blueColor
 import com.example.pizzeria.ui.theme.darkblue
+import com.example.pizzeria.ui.theme.green
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 
 class Revenue : ComponentActivity() {
@@ -110,110 +117,139 @@ fun RevenueUI(context: Context, orderList: SnapshotStateList<Order>, totalConfir
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "Revenue: $$totalConfirmed",
+            text = String.format("Revenue: $%.2f", totalConfirmed),
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
             modifier = Modifier.padding(16.dp)
         )
 
-        LazyColumn {
+        LazyColumn(
+            Modifier.padding(vertical = 15.dp, horizontal = 15.dp)
+        ) {
             itemsIndexed(orderList) { index, item ->
-                Surface(
-                    shape = RoundedCornerShape(16.dp),
-                    color = blue,
+                Column(
                     modifier = Modifier
-                        .height(210.dp)
-                        .padding(8.dp),
-                    shadowElevation = 10.dp,
-                    onClick = {
-                        val i = Intent(context, OrderDetails::class.java)
-                        i.putExtra("id", item.id)
-                        context.startActivity(i)
-                    }
+                        .fillMaxWidth()
+                        .padding(vertical = 10.dp, horizontal = 5.dp)
                 ) {
                     Row(
-                        modifier = Modifier.padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 5.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Surface(
-                            color = blue,
-                            shape = RoundedCornerShape(16.dp),
-                            modifier = Modifier.size(width = 100.dp, height = 100.dp)
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.order),
-                                contentScale = ContentScale.Crop,
-                                contentDescription = "",
-                                modifier = Modifier.size(30.dp)
+                        Row {
+                            Icon(
+                                imageVector = Icons.Rounded.DateRange,
+                                contentDescription = null,
+                                modifier = Modifier.height(20.dp)
                             )
+                            Spacer(modifier = Modifier.width(5.dp))
+                            item.date?.let { date ->
+                                val formattedDate = SimpleDateFormat(
+                                    "dd/MM/yyyy HH:mm",
+                                    Locale("vi", "VN")
+                                ).format(date)
+                                Text(
+                                    text = formattedDate,
+                                    style = MaterialTheme.typography.titleSmall,
+                                    fontSize = 15.sp,
+                                    color = blackcart
+                                )
+                            }
                         }
-                        Column(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .weight(2f)
-                                .padding(horizontal = 15.dp, vertical = 0.dp),
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Spacer(modifier = Modifier.height(6.dp))
 
-                            item.custumerName?.let {
-                                Text(
-                                    text = it,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    fontSize = 22.sp,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.height(6.dp))
-
-                            item.custumerAdd?.let {
-                                Text(
-                                    text = it,
-                                    fontSize = 22.sp,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    style = MaterialTheme.typography.titleMedium,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(6.dp))
-
-                            item.total?.let {
-                                Text(text = "$ $it")
-                            }
-
-                            Spacer(modifier = Modifier.height(3.dp))
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    }
+                    Surface(
+                        shape = RoundedCornerShape(12.dp),
+                        color = Color(0xFFEDFFF2),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                color = Color(0xFFC4FFCE),
+                                shape = RoundedCornerShape(12.dp),
+                            )
+                            .padding(bottom = 2.dp),
+                        shadowElevation = 6.dp,
+                        onClick = {
+                            val i = Intent(context, OrderDetails::class.java)
+                            i.putExtra("OrderID", item.id)
+                            context.startActivity(i)
+                        }
+                    ) {
+                        Row {
+                            Column(
+                                modifier = Modifier
+                                    .padding(15.dp)
+                                    .fillMaxWidth()
+                                    .weight(2f),
                             ) {
-                                OutlinedButton(
-                                    shape = RoundedCornerShape(7.dp),
-                                    colors = ButtonDefaults.buttonColors(
-                                        contentColor = Color.Black,
-                                        containerColor = darkblue
-                                    ),
-                                    border = BorderStroke(0.5.dp, blueColor),
-                                    onClick = {
-                                        val i = Intent(context, OrderDetails::class.java)
-                                        i.putExtra("OrderID", item.id)
-                                        context.startActivity(i)
+                                androidx.compose.material3.Surface(
+                                    shape = RoundedCornerShape(24.dp),
+                                    modifier = Modifier
+                                        .wrapContentSize()
+                                        .padding(bottom = 12.dp),
+                                    color = green
+                                ) {
+
+                                    item.status?.let {
+                                        Text(
+                                            text = it,
+                                            fontSize = 15.sp,
+                                            style = MaterialTheme.typography.titleSmall,
+                                            modifier = Modifier.padding(
+                                                vertical = 4.dp,
+                                                horizontal = 8.dp
+                                            ),
+                                            color = Color.White
+                                        )
                                     }
+
+                                }
+                                Row(
+                                    modifier = Modifier
+                                        .padding(bottom = 13.dp)
                                 ) {
                                     Text(
-                                        text = "Detail",
-                                        fontSize = 15.sp,
-                                        fontWeight = FontWeight.SemiBold,
-                                        style = MaterialTheme.typography.titleLarge
+                                        text = "Total:",
+                                        fontSize = 16.sp,
+                                        color = Color.DarkGray
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    item.total?.let {
+                                        val formattedPrice = NumberFormat.getCurrencyInstance(Locale.US).format(it)
+                                        Text(
+                                            text = formattedPrice,
+                                            fontSize = 17.sp,
+                                            color = blackcart,
+                                            fontWeight = FontWeight.Medium
+                                        )
+                                    }
+                                }
+                                Row(
+                                    modifier = Modifier
+                                        .padding(bottom = 5.dp)
+                                ) {
+                                    Text(
+                                        text = "Customer:",
+                                        fontSize = 16.sp,
+                                        color = Color.DarkGray
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = "${item.custumerName}",
+                                        fontSize = 17.sp,
+                                        color = blackcart,
+                                        fontWeight = FontWeight.Medium
                                     )
                                 }
                             }
+
                         }
+
                     }
+
                 }
             }
         }

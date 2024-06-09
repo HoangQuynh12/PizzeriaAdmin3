@@ -9,16 +9,24 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -27,7 +35,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,8 +46,10 @@ import com.example.pizzeria.MainActivity
 import com.example.pizzeria.Model.CategoryData
 import com.example.pizzeria.View.Product.ProductCategory
 import com.example.pizzeria.ui.theme.PizzeriaTheme
+import com.example.pizzeria.ui.theme.black
 import com.example.pizzeria.ui.theme.blue
 import com.example.pizzeria.ui.theme.blueColor
+import com.example.pizzeria.ui.theme.delete
 import com.example.pizzeria.ui.theme.red
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -131,87 +143,139 @@ fun CategoryDetailsUI(context: Context, categoryList: SnapshotStateList<Category
             .padding(top = 70.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+
         IconButton(onClick = { context.startActivity(Intent(context, AddType::class.java)) }) {
             Icon(imageVector = Icons.Default.AddCircle, contentDescription = "")
         }
 
-        LazyColumn {
-            itemsIndexed(categoryList) { index, item ->
-                Surface(
-                    shape = RoundedCornerShape(16.dp),
-                    color = blue,
-                    modifier = Modifier
-                        .height(100.dp)
-                        .padding(8.dp)
-                        .fillMaxWidth(),
-                    shadowElevation = 20.dp
-                ) {
-                    Row(
+        LazyVerticalGrid(
+            modifier = Modifier
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            columns = GridCells.Fixed(3),
+            content = {
+                itemsIndexed(categoryList) { index, item ->
+                    Surface(
+                        onClick = {
+                            val i = Intent(context, UpdateCategory::class.java)
+                            i.putExtra("categoryName", item.categoryName)
+                            i.putExtra("categoryID", item.categoryID)
+                            i.putExtra("categoryImage", item.categoryImage)
+                            context.startActivity(i)
+                        },
+                        shape = RoundedCornerShape(17.dp),
+                        color = Color.White,
                         modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxSize(),
-                        verticalAlignment = Alignment.CenterVertically
+                            .padding(vertical = 2.dp, horizontal = 2.dp)
+                            .background(
+                                color = blue,
+                                shape = RoundedCornerShape(17.dp)
+                            )
+                            .padding(bottom = 1.dp),
+                        shadowElevation = 8.dp
                     ) {
-                        Surface(
-                            shape = RoundedCornerShape(5.dp),
-                            modifier = Modifier.size(60.dp)
-                        ) {
-                            item.categoryImage?.let {
-                                Image(
-                                    painter = rememberAsyncImagePainter(it),
-                                    contentScale = ContentScale.Crop,
-                                    contentDescription = null
-                                )
-                            }
-                        }
-                        Spacer(modifier = Modifier.width(15.dp))
                         Column(
                             modifier = Modifier
-                                .weight(1f)
-                                .padding(end = 15.dp),
-                            verticalArrangement = Arrangement.Center
+                                .fillMaxWidth()
+                                .padding(top = 8.dp, bottom = 10.dp, start = 5.dp, end = 5.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
+
+                            Surface(
+                                shape = RoundedCornerShape(16.dp),
+                                modifier = Modifier.size(60.dp),
+                                color = Color.White,
+                            ){
+                                item.categoryImage?.let {
+                                    Image(
+                                        painter = rememberAsyncImagePainter(it),
+                                        contentScale = ContentScale.Crop,
+                                        contentDescription = null
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(10.dp))
+
                             Text(
                                 text = item.categoryName ?: "",
-                                fontSize = 22.sp,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.SemiBold,
+                                fontWeight = FontWeight.Medium,
+                                color = black,
+                                fontSize = 20.sp,
+                                style = TextStyle(
+                                    textAlign = TextAlign.Center
+                                ),
                                 modifier = Modifier.clickable {
                                     val intent = Intent(context, ProductCategory::class.java)
                                     intent.putExtra("categoryName", item.categoryName)
                                     context.startActivity(intent)
                                 }
                             )
-                        }
-                        IconButton(
-                            onClick = {
-                                val i = Intent(context, UpdateCategory::class.java)
-                                i.putExtra("categoryName", item.categoryName)
-                                i.putExtra("categoryID", item.categoryID)
-                                i.putExtra("categoryImage", item.categoryImage)
-                                context.startActivity(i)
+
+                            Spacer(modifier = Modifier.height(15.dp))
+
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceEvenly,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                androidx.compose.material.Button(
+                                    onClick = {
+                                        val i = Intent(context, UpdateCategory::class.java)
+                                        i.putExtra("categoryName", item.categoryName)
+                                        i.putExtra("categoryID", item.categoryID)
+                                        i.putExtra("categoryImage", item.categoryImage)
+                                        context.startActivity(i)
+                                    },
+                                    contentPadding = PaddingValues(),
+                                    shape = CircleShape,
+                                    colors = ButtonDefaults.buttonColors(
+                                        backgroundColor = Color.DarkGray,
+                                        contentColor = Color.White
+                                    ),
+                                    modifier = Modifier
+                                        .width(25.dp)
+                                        .height(25.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Rounded.Edit,
+                                        null,
+                                        modifier = Modifier
+                                            .size(16.dp),
+                                        tint = Color.White
+                                    )
+                                }
+                                Spacer(modifier = Modifier.height(10.dp))
+                                androidx.compose.material.Button(
+                                    onClick = {
+                                        deleteDataFromFirebase(item.categoryID, context)
+                                    },
+                                    contentPadding = PaddingValues(),
+                                    shape = CircleShape,
+                                    colors = ButtonDefaults.buttonColors(
+                                        backgroundColor = delete,
+                                        contentColor = Color.White
+                                    ),
+                                    modifier = Modifier
+                                        .width(25.dp)
+                                        .height(25.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Rounded.Delete,
+                                        null,
+                                        modifier = Modifier
+                                            .size(17.dp),
+                                        tint = Color.White
+                                    )
+                                }
                             }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = "Edit",
-                                tint = Color.Black
-                            )
                         }
-                        IconButton(
-                            onClick = {
-                                deleteDataFromFirebase(item.categoryID, context)
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = "Delete",
-                                tint = red
-                            )
-                        }
+
                     }
                 }
             }
-        }
+        )
     }
+
 }
+

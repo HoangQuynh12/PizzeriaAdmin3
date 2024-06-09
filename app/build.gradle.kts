@@ -60,6 +60,7 @@ dependencies {
     implementation("androidx.compose.foundation:foundation:1.0.0")
     implementation("io.coil-kt:coil-compose:1.3.2")
     implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.4.0")
+    implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

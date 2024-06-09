@@ -5,25 +5,36 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.rounded.KeyboardArrowRight
+import androidx.compose.material.icons.rounded.Refresh
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,11 +44,20 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pizzeria.MainActivity
+import com.example.pizzeria.R
 import com.example.pizzeria.ui.theme.PizzeriaTheme
 import com.example.pizzeria.ui.theme.blue
+import com.example.pizzeria.ui.theme.blue2
+import com.example.pizzeria.ui.theme.blueColor
+import com.example.pizzeria.ui.theme.darkblue
+import com.example.pizzeria.ui.theme.delete
+import com.example.pizzeria.ui.theme.green
+import com.example.pizzeria.ui.theme.green2
+import com.example.pizzeria.ui.theme.red
 
 
 class OrderManager : ComponentActivity() {
@@ -56,124 +76,278 @@ class OrderManager : ComponentActivity() {
         }
     }
 }
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun OrderScreen(context:Context){
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxWidth(),
     ) {
-        Row(
-            modifier = Modifier
-                .padding(top = 10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            IconButton(onClick = { context.startActivity(Intent(context, MainActivity::class.java)) }) {
-                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
-            }
-            Spacer(modifier = Modifier.width(75.dp))
-            Text(
-                text = "Order Manager", style = TextStyle(
-                    fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold,
-                )
-            )
-
-        }
-        Surface(
-            color = blue,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(shape = RoundedCornerShape(8.dp))
-                .padding(10.dp).border(width = 1.dp, color = Color.Black),
-            onClick = {
-                context.startActivity(Intent(context, OrderPending::class.java))
-            }
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
+        CenterAlignedTopAppBar(
+            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                containerColor = blueColor,
+                titleContentColor = Color.White,
+                navigationIconContentColor = Color.White,
+                actionIconContentColor = Color.White
+            ),
+            title = {
                 Text(
-                    text = "Processing",
-                    fontSize = 24.sp,
-                    modifier = Modifier.padding(10.dp)
-
+                    text = "Order Manager",
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    fontWeight = FontWeight.Bold
                 )
-                Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription ="" )
-            }
-        }
-        Surface(
-            color = blue,
+            },
+            navigationIcon = {
+                IconButton(onClick = {
+                    context.startActivity(Intent(context, MainActivity::class.java))
+                }) {
+                    Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "")
+                }
+            },
+        )
+
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .clip(shape = RoundedCornerShape(8.dp))
-                .padding(10.dp).border(width = 1.dp, color = Color.Black),
-            onClick = {
-                context.startActivity(Intent(context, OrderShipping::class.java))
-            }
-        ) {
+                .fillMaxSize()
+                .padding(top = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ){
             Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp, bottom = 5.dp, start = 20.dp, end = 20.dp)
+                    .height(55.dp)
             ) {
-                Text(
-                    text = "Shipping",
-                    fontSize = 24.sp,
-                    modifier = Modifier.padding(10.dp)
-
-                )
-                Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription ="" )
+                androidx.compose.material.Surface(
+                    onClick = {
+                        context.startActivity(Intent(context, OrderPending::class.java))
+                    },
+                    shape = RoundedCornerShape(12.dp),
+                    color = Color.White,
+                    border = BorderStroke(1.dp, Color(0xFFF3B95F)),
+                    elevation = 3.dp
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxHeight(),
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(imageVector = Icons.Rounded.Refresh,
+                                contentDescription = "",
+                                tint = Color(0xFFF3B95F),
+                                modifier = Modifier
+                                    .padding(start = 10.dp, end = 5.dp)
+                                    .clickable { }
+                            )
+                        }
+                        Column(
+                            modifier = Modifier
+                                .padding(start = 10.dp)
+                                .weight(1f)
+                        ) {
+                            Text(
+                                text = "Processing",
+                                color = Color(0xFFFF8911),
+                                fontSize = 21.sp
+                            )
+                        }
+                        Column(
+                            modifier = Modifier
+                                .fillMaxHeight(),
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(imageVector = Icons.Rounded.KeyboardArrowRight,
+                                contentDescription = "",
+                                tint = Color(0xFFF3B95F),
+                                modifier = Modifier
+                                    .padding(end = 5.dp)
+                                    .clickable { })
+                        }
+                    }
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp, bottom = 5.dp, start = 20.dp, end = 20.dp)
+                    .height(55.dp)
+            ) {
+                androidx.compose.material.Surface(
+                    onClick = {
+                        context.startActivity(Intent(context, OrderShipping::class.java))
+                    },
+                    shape = RoundedCornerShape(12.dp),
+                    color = Color.White,
+                    border = BorderStroke(1.dp, blue),
+                    elevation = 3.dp
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxHeight(),
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_order),
+                                contentDescription = "",
+                                tint = darkblue,
+                                modifier = Modifier
+                                    .padding(start = 10.dp, end = 5.dp)
+                                    .clickable { }
+                            )
+                        }
+                        Column(
+                            modifier = Modifier
+                                .padding(start = 10.dp)
+                                .weight(1f)
+                        ) {
+                            Text(
+                                text = "Shipping",
+                                color = darkblue,
+                                fontSize = 21.sp
+                            )
+                        }
+                        Column(
+                            modifier = Modifier
+                                .fillMaxHeight(),
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(imageVector = Icons.Rounded.KeyboardArrowRight,
+                                contentDescription = "",
+                                tint = blue,
+                                modifier = Modifier
+                                    .padding(end = 5.dp)
+                                    .clickable { })
+                        }
+                    }
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp, bottom = 5.dp, start = 20.dp, end = 20.dp)
+                    .height(55.dp)
+            ) {
+                androidx.compose.material.Surface(
+                    onClick = {
+                        context.startActivity(Intent(context, OrderCancelled::class.java))
+                    },
+                    shape = RoundedCornerShape(12.dp),
+                    color = Color.White,
+                    border = BorderStroke(1.dp, delete),
+                    elevation = 3.dp
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxHeight(),
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.cancelled),
+                                contentDescription = "",
+                                tint = red,
+                                modifier = Modifier
+                                    .size(31.dp)
+                                    .padding(start = 10.dp, end = 5.dp)
+                                    .clickable { }
+                            )
+                        }
+                        Column(
+                            modifier = Modifier
+                                .padding(start = 10.dp)
+                                .weight(1f)
+                        ) {
+                            Text(
+                                text = "Cancelled",
+                                color = red,
+                                fontSize = 21.sp
+                            )
+                        }
+                        Column(
+                            modifier = Modifier
+                                .fillMaxHeight(),
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(imageVector = Icons.Rounded.KeyboardArrowRight,
+                                contentDescription = "",
+                                tint = delete,
+                                modifier = Modifier
+                                    .padding(end = 5.dp)
+                                    .clickable { })
+                        }
+                    }
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp, bottom = 5.dp, start = 20.dp, end = 20.dp)
+                    .height(55.dp)
+            ) {
+                androidx.compose.material.Surface(
+                    onClick = {
+                        context.startActivity(Intent(context, OrderCompleted::class.java))
+                    },
+                    shape = RoundedCornerShape(12.dp),
+                    color = Color.White,
+                    border = BorderStroke(1.dp, green2),
+                    elevation = 3.dp
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxHeight(),
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.CheckCircle,
+                                contentDescription = "",
+                                tint = green2,
+                                modifier = Modifier
+                                    .padding(start = 10.dp, end = 5.dp)
+                                    .clickable { }
+                            )
+                        }
+                        Column(
+                            modifier = Modifier
+                                .padding(start = 10.dp)
+                                .weight(1f)
+                        ) {
+                            Text(
+                                text = "Completed",
+                                color = green,
+                                fontSize = 21.sp
+                            )
+                        }
+                        Column(
+                            modifier = Modifier
+                                .fillMaxHeight(),
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.KeyboardArrowRight,
+                                contentDescription = "",
+                                tint = green2,
+                                modifier = Modifier
+                                    .padding(end = 5.dp)
+                                    .clickable { }
+                            )
+                        }
+                    }
+                }
             }
         }
-        Surface(
-            color = blue,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(shape = RoundedCornerShape(8.dp))
-                .padding(10.dp).border(width = 1.dp, color = Color.Black),
-            onClick = {
-                context.startActivity(Intent(context, OrderCancelled::class.java))
-            }
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "Canceled",
-                    fontSize = 24.sp,
-                    modifier = Modifier.padding(10.dp)
 
-                )
-                Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription ="" )
-            }
-        }
-        Surface(
-            color = blue,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(shape = RoundedCornerShape(8.dp))
-                .padding(10.dp).border(width = 1.dp, color = Color.Black),
-            onClick = {
-                context.startActivity(Intent(context, OrderCompleted::class.java))
-            }
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text(
-                    text = "Completed",
-                    fontSize = 24.sp,
-                    modifier = Modifier.padding(10.dp)
-
-                )
-                Icon(imageVector = Icons.Default.KeyboardArrowRight, contentDescription ="" )
-            }
-        }
     }
 }

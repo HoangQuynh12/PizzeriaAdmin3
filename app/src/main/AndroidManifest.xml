@@ -89,11 +89,11 @@
             android:exported="true"
             android:label="@string/title_activity_user_information"
             android:theme="@style/Theme.Pizzeria" />
-        <activity
-            android:name=".Login"
-            android:exported="true"
-            android:label="@string/title_activity_login"
-            android:theme="@style/Theme.Pizzeria" />
+<!--        <activity-->
+<!--            android:name=".Login"-->
+<!--            android:exported="true"-->
+<!--            android:label="@string/title_activity_login"-->
+<!--            android:theme="@style/Theme.Pizzeria" />-->
         <activity
             android:name=".MainActivity"
             android:exported="true"
