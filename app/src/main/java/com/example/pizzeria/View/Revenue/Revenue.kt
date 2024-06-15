@@ -126,7 +126,7 @@ fun RevenueUI(context: Context, orderList: SnapshotStateList<Order>, totalConfir
         LazyColumn(
             Modifier.padding(vertical = 15.dp, horizontal = 15.dp)
         ) {
-            itemsIndexed(orderList) { index, item ->
+            itemsIndexed(orderList.sortedByDescending { it.date }) { index, item ->
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()

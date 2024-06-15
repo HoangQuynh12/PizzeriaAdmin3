@@ -146,7 +146,7 @@ fun HomeScreen(context: Context){
                     )
                 }
                 Image(
-                    painter = painterResource(id = R.drawable.profile),
+                    painter = painterResource(id = R.drawable.profilead),
                     contentDescription = "",
                     modifier = Modifier
                         .height(100.dp)

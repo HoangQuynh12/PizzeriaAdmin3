@@ -143,7 +143,7 @@ fun CompletedScreen(context: Context, pendingList: List<Order>) {
         LazyColumn(
             Modifier.padding(vertical = 15.dp, horizontal = 15.dp)
         ) {
-            items(pendingList) { order ->
+            items(pendingList.sortedByDescending { it.date }) { order ->
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()

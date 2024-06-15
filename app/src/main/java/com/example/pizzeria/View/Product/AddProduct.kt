@@ -112,21 +112,23 @@ fun AddProductUI(context: Context) {
     TextButton(onClick = {
         context.startActivity(Intent(context, ProductDetails::class.java))
     }) {
+        Icon(
+            imageVector = Icons.Default.Menu,
+            contentDescription = null,
+            tint = blueColor
+        )
+        Spacer(modifier = Modifier.width(5.dp))
         Text(
             text = "All Product",
             fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
             color = blueColor,
         )
-        Icon(
-            imageVector = Icons.Default.Menu,
-            contentDescription = null,
-            tint = blueColor
-        )
+        
     }
 
     Column(
-        modifier = Modifier.padding(40.dp),
+        modifier = Modifier.padding(30.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         SelectItemImageSection { imageUrl ->
@@ -220,10 +222,9 @@ fun AddProductUI(context: Context) {
             onValueChange = { productDescription.value = it },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(59.dp),
+                .height(120.dp),
             shape = RoundedCornerShape(10.dp),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            singleLine = true,
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 containerColor = Color.White,
                 focusedBorderColor = blueColor,

@@ -124,7 +124,7 @@ fun updateProductUI(
 
     val newImageUrl = remember { mutableStateOf<String?>(null) }
     Column(
-        modifier = Modifier.padding(40.dp),
+        modifier = Modifier.padding(30.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         SelectItemImageSection { imageUrl ->
@@ -217,10 +217,9 @@ fun updateProductUI(
             onValueChange = { productDescription.value = it },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(58.dp),
+                .height(120.dp),
             shape = RoundedCornerShape(10.dp),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            singleLine = true,
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 containerColor = Color.White,
                 focusedBorderColor = blueColor,
